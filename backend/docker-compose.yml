@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  postgres-services:
+    image: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/data/postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: banana
+      POSTGRES_DB: common-shop
+
+  backend-nest:
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        - NODE_ENV=development
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/app
+      - ./node_modules:/app/node_modules
+    environment:
+      DATABASE_URL: postgres://admin:banana@postgres-services:5432/common-shop
+      NODE_ENV: development
+      PORT: 3001
+    depends_on:
+      - postgres-services
+
+volumes:
+  postgres-data:
+
+networks:
+  common-shop-app:
