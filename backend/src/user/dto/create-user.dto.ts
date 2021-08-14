@@ -1,13 +1,18 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { Role } from '../type';
 
 export class CreateUserDto {
 
     @IsNotEmpty()
-    readonly username: string;
+    username: string;
 
     @IsNotEmpty()
-    readonly email: string;
+    email: string;
 
     @IsNotEmpty()
-    readonly password: string;
+    password: string;
+
+    @IsEnum(Role)
+    @IsNotEmpty()
+    role: string;
 }

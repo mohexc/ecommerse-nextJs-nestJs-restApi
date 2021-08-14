@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
@@ -20,8 +20,8 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  findOneById(@Param('id') id: string) {
+    return this.userService.findOneById(+id);
   }
 
   @Patch(':id')

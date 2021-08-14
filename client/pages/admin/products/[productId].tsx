@@ -7,12 +7,12 @@ import { useProductsContext } from "../../../context/products.context";
 const ProductDetailPage: FC = () => {
   const router = useRouter();
   const { productId } = router.query;
-  const { product, loadingProduct, errorProduct, getProduct, updateProduct } = useProductsContext();
+  const { product, isloading, getProduct, updateProduct } = useProductsContext();
   useEffect(() => {
     if (productId) {
       getProduct(productId);
     }
-  }, []);
+  }, [productId]);
 
   const onFinish = (values: any) => {
     updateProduct(productId, values);
@@ -25,12 +25,12 @@ const ProductDetailPage: FC = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-  if (loadingProduct) {
+  if (isloading) {
     return <p>Loading...</p>;
   }
 
   return (
-    <Card style={{ margin: "1rem" }}>
+    <Card style={{ margin: "0.5rem" }}>
       <Typography.Title level={3}>Edit & View Product</Typography.Title>
       <Form
         name="basic"

@@ -27,11 +27,8 @@ export interface Product {
 
 export interface ProductContext {
     products: Product[] | undefined;
-    loadingProducts: boolean;
-    errorProducts: string | undefined;
     product: Product | undefined;
-    loadingProduct: boolean;
-    errorProduct: string | undefined;
+    isloading: boolean;
     createProduct: (values) => Promise<void>;
     getProducts: () => Promise<void>;
     getProduct: (id: string | string[]) => Promise<void>;

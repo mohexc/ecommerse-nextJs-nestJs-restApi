@@ -1,31 +1,24 @@
-import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from "react-query";
+
 import httpRequests from "../utils/http-request";
 import { Product, ProductContext } from "./type";
 
 const Context = React.createContext<ProductContext>({
   products: undefined,
-  loadingProducts: false,
-  errorProducts: undefined,
   product: undefined,
-  loadingProduct: false,
-  errorProduct: undefined,
-  createProduct: async (values) => {},
+  isloading: false,
+  createProduct: async () => {},
   getProducts: async () => {},
-  getProduct: async (id) => {},
-  updateProduct: async (id, values) => {},
-  deleteProduct: (id) => {},
+  getProduct: async () => undefined,
+  updateProduct: async () => {},
+  deleteProduct: () => {},
 });
 
 // main component
 const ProductsContext = ({ children }) => {
   const [products, setProducts] = useState<Product[] | undefined>();
-  const [loadingProducts, setLoadingProducts] = useState(false);
-  const [errorProducts, setErrorProducts] = useState();
   const [product, setProduct] = useState<Product | undefined>();
-  const [loadingProduct, setLoadingProduct] = useState(false);
-  const [errorProduct, setErrorProduct] = useState();
+  const [isloading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getProducts();
@@ -34,27 +27,24 @@ const ProductsContext = ({ children }) => {
   const createProduct = async (values) => {
     try {
       const { data } = await httpRequests.post(`product`, values);
-      debugger;
       getProducts();
     } catch (error) {
-      console.log(error);
-      debugger;
       return error;
     }
   };
 
   const getProducts = async () => {
-    setLoadingProducts(true);
+    setIsLoading(true);
     const { data } = await httpRequests.get(`product`);
     setProducts(data);
-    setLoadingProducts(false);
+    setIsLoading(false);
   };
 
   const getProduct = async (id) => {
-    setLoadingProduct(true);
+    setIsLoading(true);
     const { data } = await httpRequests.get(`product/${id}`);
     setProduct(data);
-    setLoadingProduct(false);
+    setIsLoading(false);
   };
 
   const updateProduct = async (id, values) => {
@@ -71,11 +61,8 @@ const ProductsContext = ({ children }) => {
 
   const context = {
     products,
-    loadingProducts,
-    errorProducts,
     product,
-    loadingProduct,
-    errorProduct,
+    isloading,
     createProduct,
     getProducts,
     getProduct,

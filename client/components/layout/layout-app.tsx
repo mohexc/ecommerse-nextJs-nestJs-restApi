@@ -15,13 +15,13 @@ const LayoutApp: FC = ({ children }) => {
   useEffect(() => {
     const pathname = router.pathname.split("/");
     const _routeAdmin = pathname[1];
-    setRouteAmdin(_routeAdmin);
+    _routeAdmin === "admin" ? setRouteAmdin(_routeAdmin) : setRouteAmdin(undefined);
   }, [router]);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <HeaderBar />
       <Layout>
-        {currentUser?.role === "admin" && <SiderBar />}
+        {routeAmdin && <SiderBar />}
         <Layout.Content>{children}</Layout.Content>
       </Layout>
     </Layout>

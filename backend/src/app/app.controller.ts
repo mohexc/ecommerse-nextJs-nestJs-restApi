@@ -8,19 +8,15 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Post('uploadfile')
+  @Post('single-uploadfile')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
   }
 
-  @Post('uploadfiles')
+  @Post('multiple-uploadfile')
   @UseInterceptors(FilesInterceptor('files'))
   uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     console.log(files);
   }
-
-
-
-
 }

@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { UserService } from 'src/user/user.service';
 import { SignInDTO } from './dto/signin-auth.dto';
 
 @Injectable()
 export class AuthService {
-  signin(createAuthDto: SignInDTO) {
-    return 'This action adds a new auth';
+  constructor(private userService: UserService) { }
+
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.userService.findOneByUsername(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
-  signup(createAuthDto: SignInDTO) {
-    return 'This action adds a new auth';
-  }
-  signout(createAuthDto: SignInDTO) {
-    return 'This action adds a new auth';
-  }
-  getProfile(createAuthDto: SignInDTO) {
-    return 'This action adds a new auth';
-  }
-  changePassword(createAuthDto: SignInDTO) {
-    return 'This action adds a new auth';
-  }
+
 }
