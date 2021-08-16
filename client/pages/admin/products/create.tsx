@@ -18,7 +18,7 @@ const CreateProductPage: FC = () => {
   };
 
   return (
-    <Card style={{ margin: "1rem" }}>
+    <Card style={{ margin: "0.5rem" }}>
       <Typography.Title level={3}>Create Product</Typography.Title>
       <Form
         name="Create_Product"

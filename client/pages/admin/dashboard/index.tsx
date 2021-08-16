@@ -1,6 +1,7 @@
 import React from "react";
+import { FC } from "react";
 
-const DashboradPage = () => {
+const DashboradPage: FC = () => {
   return <div>DashboradPage</div>;
 };
 

@@ -8,7 +8,7 @@ export class User {
     @Column()
     username: string;
 
-    @Column()
+    @Column({ length: 60 })
     password: string;
 
     @Column()

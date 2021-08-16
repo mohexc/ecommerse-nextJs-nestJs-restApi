@@ -41,8 +41,8 @@ const CreateUser = () => {
     >
       <Form
         name="basic"
-        labelCol={{ xs: 4 }}
-        wrapperCol={{ xs: 20, lg: 12 }}
+        labelCol={{ xs: 6 }}
+        wrapperCol={{ xs: 18 }}
         onFinish={onFinish}
         initialValues={{ role: "user" }}
       >
@@ -86,7 +86,7 @@ const CreateUser = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 4, span: 12 }}>
+        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
           <Button disabled={disableBotton} loading={disableBotton} block type="primary" htmlType="submit">
             Submit
           </Button>
