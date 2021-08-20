@@ -1,0 +1,40 @@
+User
+
+Adress
+    address: string
+    city : string
+    postalCode : string
+    country: string
+
+Product
+    name
+    title
+    description
+    brand
+    category
+    images
+    price
+    countInStock
+    createAt
+
+Cart
+
+CartItem
+
+Order
+    user : -> User
+    orderItems : orderItem[]
+    paymentMethod
+    paymentStatus
+    addressDelivery
+    deliveryMethod
+    deliveryStatus
+    totalPrice
+
+
+OrderItem
+    name:
+    qty
+    image
+    price
+    product : productId

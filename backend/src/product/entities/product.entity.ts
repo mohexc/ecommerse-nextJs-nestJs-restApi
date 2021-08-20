@@ -17,4 +17,10 @@ export class Product {
 
     @Column()
     price: number;
+
+    @Column("text", { array: true })
+    images: string[];
+
+    @Column()
+    video: string;
 }

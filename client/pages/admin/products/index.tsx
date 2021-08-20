@@ -2,6 +2,7 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, Row, Select, Table, Modal, Typography } from "antd";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
+import ReactPlayer from "react-player";
 import NCard from "../../../components/common/n-card";
 import { useProductsContext } from "../../../context/products.context";
 
@@ -28,6 +29,14 @@ const ProductsPage: FC = () => {
       title: "Id",
       dataIndex: "id",
       key: "id",
+    },
+    {
+      title: "image",
+      dataIndex: "images",
+      key: "images",
+      render: (record) => {
+        return <img src={record[0]} height={50} />;
+      },
     },
     {
       title: "Name",

@@ -1,21 +1,21 @@
-import React, { FC, useImperativeHandle, RefForwardingComponent, useState } from "react";
+import React, { FC, useImperativeHandle, useState } from "react";
 import { Button, Modal, Form, Input, Checkbox, Row, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 import { useRouter } from "next/router";
 import { useAuthContext } from "../../context/auth.context";
 
-interface ionFinishInput {
+interface FinishInput {
   username: string;
   password: string;
-  rememberMe: boolean;
 }
 // main component
-const SignIn: React.ForwardRefRenderFunction<unknown, any> = (props, ref) => {
+const SignUp: React.ForwardRefRenderFunction<unknown, any> = (props, ref) => {
   const [visible, setvisible] = useState(false);
-  const { signIn: loggin } = useAuthContext();
+  const { signIn } = useAuthContext();
   const router = useRouter();
   const [form] = Form.useForm();
+  const [submitBtn, setsubmitBtn] = useState(false);
 
   useImperativeHandle(ref, () => ({
     showModal: () => {
@@ -23,22 +23,21 @@ const SignIn: React.ForwardRefRenderFunction<unknown, any> = (props, ref) => {
     },
   }));
 
-  const onFinish = (data: ionFinishInput) => {
-    try {
-      const result = loggin(data);
-      notification.success({
-        message: "Sing In success",
-        description: result,
-      });
-      router.push("/admin/dashboard");
-      setvisible(false);
-      form.resetFields();
-    } catch (error) {
+  const onFinish = async (data: FinishInput) => {
+    setsubmitBtn(true);
+    const result = await signIn(data);
+    if (result.error) {
       notification.error({
-        message: "Sing In faile",
-        description: "Sing In faile",
+        message: "Error",
+        description: "Check Email and Password",
       });
+      return setsubmitBtn(false);
     }
+    notification.success({
+      message: "Sign In",
+      description: "Success",
+    });
+    return setsubmitBtn(false);
   };
 
   return (
@@ -51,26 +50,13 @@ const SignIn: React.ForwardRefRenderFunction<unknown, any> = (props, ref) => {
           <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Password" />
         </Form.Item>
         <Form.Item>
-          <Row justify="space-between">
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <a className="login-form-forgot" href="">
-              Forgot password
-            </a>
-          </Row>
-        </Form.Item>
-
-        <Form.Item>
-          <Button block type="primary" htmlType="submit">
+          <Button loading={submitBtn} disabled={submitBtn} block type="primary" htmlType="submit">
             Sing In
           </Button>
-          Or <a href="">register now!</a>
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default React.forwardRef(SignIn);
+export default React.forwardRef(SignUp);

@@ -1,16 +1,13 @@
 import { Button } from "antd";
-import React, { useRef } from "react";
-import SignIn from "../../auth/sign-in";
+import { useRouter } from "next/router";
+import React from "react";
 
 const SignInBtn = () => {
-  const signinModalRef = useRef(null);
+  const route = useRouter();
   return (
-    <>
-      <SignIn ref={signinModalRef} />
-      <Button onClick={() => signinModalRef.current.showModal()} type="link">
-        Sign In
-      </Button>
-    </>
+    <Button onClick={() => route.push("/auth/signin")} type="link">
+      Sign In
+    </Button>
   );
 };
 

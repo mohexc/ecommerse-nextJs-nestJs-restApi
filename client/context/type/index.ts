@@ -5,19 +5,6 @@ export interface User {
     role: string;
 }
 
-export interface SingInInput {
-    username: string;
-    password: string;
-}
-
-export interface AuthContextInterface {
-    currentUser: User | undefined;
-    signIn: (data: SingInInput) => any;
-    signUp: () => void;
-    signOut: () => void;
-    forgetPassword: () => void;
-}
-
 export interface Product {
     name: string;
     title: string;
@@ -34,4 +21,10 @@ export interface ProductContext {
     getProduct: (id: string | string[]) => Promise<void>;
     updateProduct: (id, values) => Promise<void>;
     deleteProduct: (id: string) => void;
+}
+
+export interface SignUpInput {
+    username: string
+    email: string
+    password: string
 }

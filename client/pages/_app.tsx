@@ -8,9 +8,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <StoreContext>
       <LayoutApp>
-        <ProtectRoute>
-          <Component {...pageProps} />
-        </ProtectRoute>
+        {/* <ProtectRoute> */}
+        <Component {...pageProps} />
+        {/* </ProtectRoute> */}
       </LayoutApp>
     </StoreContext>
   );

@@ -1,5 +1,5 @@
 import { LogoutOutlined, PieChartOutlined, UserAddOutlined } from "@ant-design/icons";
-import { Popover, Avatar } from "antd";
+import { Popover, Avatar, Row } from "antd";
 import { useRouter } from "next/router";
 import React from "react";
 import { useAuthContext } from "../../../context/auth.context";
@@ -10,9 +10,11 @@ const AvatarUser = () => {
 
   const content = (
     <div>
-      <p onClick={() => route.push("/admin/dashboard")} style={{ cursor: "pointer" }}>
-        <PieChartOutlined /> <span style={{ marginLeft: "0.5rem" }}>Dashboard</span>
-      </p>
+      {currentUser.role === "admin" && (
+        <p onClick={() => route.push("/admin/dashboard")} style={{ cursor: "pointer" }}>
+          <PieChartOutlined /> <span style={{ marginLeft: "0.5rem" }}>Dashboard</span>
+        </p>
+      )}
       <p onClick={() => route.push("/account")} style={{ cursor: "pointer" }}>
         <UserAddOutlined /> <span style={{ marginLeft: "0.5rem" }}>Account</span>
       </p>
@@ -23,7 +25,14 @@ const AvatarUser = () => {
   );
   return (
     <Popover placement="bottomLeft" title={currentUser?.username} content={content} trigger="click">
-      {currentUser && <Avatar style={{ cursor: "pointer" }}>{currentUser?.username}</Avatar>}
+      {currentUser && (
+        <Row align="middle">
+          <Avatar style={{ cursor: "pointer", marginLeft: "2rem" }}>
+            {currentUser?.username.charAt(0).toUpperCase()}
+          </Avatar>
+          <span style={{ marginLeft: "1rem" }}>{currentUser?.username}</span>
+        </Row>
+      )}
     </Popover>
   );
 };

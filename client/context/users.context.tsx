@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import httpRequests from "../utils/http-request";
+import { useAuthContext } from "./auth.context";
 
 export interface CreateUserInput {
   username: string;
@@ -40,6 +40,7 @@ const UsersContext = ({ children }) => {
   const [user, setUser] = useState<User | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+  const { httpRequests } = useAuthContext();
   useEffect(() => {
     getUsers();
   }, []);
@@ -55,10 +56,14 @@ const UsersContext = ({ children }) => {
   };
 
   const getUsers = async () => {
-    setIsLoading(true);
-    const { data } = await httpRequests.get("users");
-    setUsers(data);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const { data } = await httpRequests.get("users");
+      setUsers(data);
+      setIsLoading(false);
+    } catch (error) {
+      return error;
+    }
   };
 
   const getUser = async (id) => {

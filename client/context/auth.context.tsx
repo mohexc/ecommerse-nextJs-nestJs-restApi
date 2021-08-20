@@ -1,56 +1,97 @@
+import axios, { AxiosInstance } from "axios";
 import React, { useState, useContext, useEffect } from "react";
-import { users as listUser } from "../utils/db";
-import { AuthContextInterface, SingInInput, User } from "./type";
+import { SignUpInput, User } from "./type";
 
+export interface SignInInput {
+  username: string;
+  password: string;
+}
+export interface AuthContextInterface {
+  currentUser: User | undefined;
+  signIn: (data: SignInInput) => Promise<any>;
+  signUp: (data: SignUpInput) => Promise<any>;
+  signOut: () => void;
+  httpRequests: AxiosInstance;
+}
 const Context = React.createContext<AuthContextInterface>({
   currentUser: undefined,
-  signIn: () => {},
-  signUp: () => {},
+  signIn: async () => {},
+  signUp: async () => {},
   signOut: () => {},
-  forgetPassword: () => {},
+  httpRequests: axios.create({ baseURL: "http://localhost:3001/" }),
 });
 // main component
 const AuthContext = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
+  const [tokenKey, setTokenKey] = useState<string | undefined>();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
-    if (user) {
-      setCurrentUser(user);
-    }
+    setTokenKey(localStorage.getItem("tokenKey"));
   }, []);
-  const signIn = (data: SingInInput) => {
+
+  useEffect(() => {
+    if (tokenKey) {
+      getProfile();
+    }
+  }, [tokenKey]);
+
+  const httpRequests = axios.create({
+    baseURL: "http://localhost:3001/",
+    headers: { Authorization: `Bearer ${tokenKey}` },
+  });
+
+  const signIn = async (values: SignInInput) => {
     try {
-      const { password, ...user } = listUser.find((user) => user.username === data.username);
-      if (!user) throw new Error("User not found");
-      setCurrentUser(user);
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      return "Sign In Successfully";
+      const { data } = await httpRequests.post("auth/login", values);
+      setTokenKey(data.access_token);
+      localStorage.setItem("tokenKey", data.access_token);
+      return data;
     } catch (error) {
-      return error;
+      const result = error.response ? error.response.data.message[0] : error.response.message;
+      return {
+        error: true,
+        message: result,
+      };
     }
   };
-  const signUp = () => {
-    return;
+
+  const getProfile = async () => {
+    const { data } = await httpRequests.get("auth/profile");
+    setCurrentUser(data);
+    debugger;
   };
+
+  const signUp = async (values: SignUpInput) => {
+    try {
+      const { data } = await httpRequests.post("users", { ...values, role: "user" });
+      return data;
+    } catch (error) {
+      const result = error.response ? error.response.data.message[0] : error.response.message;
+      return {
+        error: true,
+        message: result,
+      };
+    }
+  };
+
   const signOut = () => {
-    // localStorage.removeItem("currentUser");
+    localStorage.removeItem("tokenKey");
     setCurrentUser(undefined);
   };
-  const forgetPassword = () => {
-    return;
-  };
 
-  const context = {
-    currentUser,
-    signIn,
-    signUp,
-    signOut,
-    forgetPassword,
-  };
-
-  return <Context.Provider value={context}>{children}</Context.Provider>;
+  return (
+    <Context.Provider
+      value={{
+        httpRequests,
+        currentUser,
+        signIn,
+        signUp,
+        signOut,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
 };
 
 export const useAuthContext = () => {

@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-
-import httpRequests from "../utils/http-request";
+import { useAuthContext } from "./auth.context";
 import { Product, ProductContext } from "./type";
 
 const Context = React.createContext<ProductContext>({
@@ -19,7 +18,7 @@ const ProductsContext = ({ children }) => {
   const [products, setProducts] = useState<Product[] | undefined>();
   const [product, setProduct] = useState<Product | undefined>();
   const [isloading, setIsLoading] = useState(false);
-
+  const { httpRequests } = useAuthContext();
   useEffect(() => {
     getProducts();
   }, []);
