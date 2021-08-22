@@ -8,6 +8,7 @@ import getBase64 from "../../../utils/get-base64";
 import ReactPlayer from "react-player";
 import { useEffect } from "react";
 import { useAuthContext } from "../../../context/auth.context";
+import { useRouter } from "next/router";
 
 // main
 const CreateProductPage: FC = () => {
@@ -15,7 +16,8 @@ const CreateProductPage: FC = () => {
   const { createProduct } = useProductsContext();
   const [video, setVideo] = useState<string | undefined>();
   const [submitBtn, setSubmitBtn] = useState(false);
-  const { httpRequests } = useAuthContext();
+  const { httpRequests, currentUser } = useAuthContext();
+  const route = useRouter();
   const [pictures, setPictures] = useState({
     previewVisible: false,
     previewImage: "",
@@ -24,8 +26,10 @@ const CreateProductPage: FC = () => {
   });
 
   useEffect(() => {
-    console.log(video);
-  }, [video]);
+    if (currentUser?.role !== "admin") {
+      route.push("/");
+    }
+  }, [currentUser]);
 
   const handleCancel = () => setPictures({ ...pictures, previewVisible: false });
 
@@ -52,33 +56,31 @@ const CreateProductPage: FC = () => {
   );
 
   const onFinish = async (values: any) => {
-    try {
-      setSubmitBtn(true);
-      const formData = new FormData();
-      pictures.fileList.forEach((file) => {
-        formData.append("files", file.originFileObj);
-      });
-      const { data } = await httpRequests.post(`multiple-uploadfile`, formData);
-      values.images = data;
-      await createProduct(values);
-      notification.success({
-        message: "Create Product",
-        description: "Success",
-      });
-    } catch (error) {
-      notification.error({
-        message: "Create Product",
-        description: JSON.stringify(error),
-      });
-    } finally {
+    setSubmitBtn(true);
+    const formData = new FormData();
+    pictures.fileList.forEach((file) => {
+      formData.append("files", file.originFileObj);
+    });
+    const { data } = await httpRequests.post(`multiple-uploadfile`, formData);
+    values.images = data;
+    const result = await createProduct(values);
+    if (result.error) {
       setSubmitBtn(false);
+      return notification.error({
+        message: "Create Product",
+        description: result.message,
+      });
     }
+    notification.success({
+      message: "Create Product",
+      description: "Success",
+    });
+    setSubmitBtn(false);
   };
 
   const handleChenageInputVideo = (e) => {
     const _video = form.getFieldValue("video");
     setVideo(_video);
-    debugger;
   };
 
   return (
@@ -89,13 +91,30 @@ const CreateProductPage: FC = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item label="Title" name="title" rules={[{ required: true, message: "Please input your title!" }]}>
+        <Form.Item label="Title" name="title">
           <Input />
         </Form.Item>
         <Form.Item
           label="Description"
           name="description"
           rules={[{ required: true, message: "Please input your description!" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label="Brand" name="brand" rules={[{ required: true, message: "Please input your Brand!" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Category"
+          name="category"
+          rules={[{ required: true, message: "Please input your Category!" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Count In Stock"
+          name="countInStock"
+          rules={[{ required: true, message: "Please input your Count In Stock!" }]}
         >
           <Input />
         </Form.Item>
@@ -121,10 +140,13 @@ const CreateProductPage: FC = () => {
         <Form.Item label="Video" name="video">
           <Input onChange={handleChenageInputVideo} />
         </Form.Item>
+        <Row>
+          <Col xs={{ span: 18, offset: 6 }}>
+            {video && <ReactPlayer url={video} style={{ marginBottom: "1rem" }} width={"100%"} height={500} />}
+          </Col>
+        </Row>
 
         <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-          {video && <ReactPlayer url={video} style={{ marginBottom: "1rem" }} width={"100%"} height={500} />}
-
           <Button loading={submitBtn} disabled={submitBtn} block type="primary" htmlType="submit">
             Submit
           </Button>

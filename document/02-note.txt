@@ -1,0 +1,29 @@
+const cart = [
+    {
+        product:{
+            id
+            name
+            title
+            description
+            price
+        }
+        qyt : 1
+    }
+]
+
+const addCartItem = (product) => {
+    const cloneCart = [...cart]
+    const findeCartItem =  cloneCart.finde(cartItem => product.id === cartItem.product.id)
+    const findeCartItemIndex =  cloneCart.finde(cartItem => product.id === cartItem.product.id)
+    if(findeCartItem){
+        findeCartItem.qyt = findeCartItem.qyt + 1
+        cloneCart[findeCartItemIndex] = findeCartItem
+        return setCart(cloneCart)
+    }
+    else{
+        cloneCart.push(product)
+    }
+}
+const removeCartItem = () => {
+
+}

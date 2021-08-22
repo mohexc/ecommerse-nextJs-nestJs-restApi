@@ -1,6 +1,12 @@
 User
+    username
+    password
+    email
+    isActive
+    role
+    address : -> Address
 
-Adress
+Address
     address: string
     city : string
     postalCode : string
@@ -16,14 +22,20 @@ Product
     price
     countInStock
     createAt
+    updateAt
 
 Cart
+    user: -> User
+    cartItems: -> CarItem[]
 
 CartItem
-
+    product: -> ProductId
+    qty
+    
 Order
     user : -> User
     orderItems : orderItem[]
+    imageBill: string
     paymentMethod
     paymentStatus
     addressDelivery
@@ -31,10 +43,6 @@ Order
     deliveryStatus
     totalPrice
 
-
 OrderItem
-    name:
-    qty
-    image
-    price
-    product : productId
+    product: -> Product
+    totalPrice

@@ -6,7 +6,7 @@ import { FC } from "react";
 const SignUpBtn: FC = () => {
   const route = useRouter();
   return (
-    <Button onClick={() => route.push("/signup")} type="link">
+    <Button onClick={() => route.push("/auth/signup")} type="link">
       Sign Up
     </Button>
   );

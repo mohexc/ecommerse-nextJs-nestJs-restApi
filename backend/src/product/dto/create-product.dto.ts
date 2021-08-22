@@ -3,14 +3,29 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateProductDto {
 
     @IsNotEmpty()
-    readonly name: string;
+    name: string;
 
     @IsNotEmpty()
-    readonly title: string;
+    title: string;
 
     @IsNotEmpty()
-    readonly description: string;
+    description: string;
 
     @IsNotEmpty()
-    readonly price: number;
+    price: number;
+
+    @IsNotEmpty()
+    images: string[];
+
+    @IsNotEmpty()
+    video: string;
+
+    @IsNotEmpty()
+    brand: string;
+
+    @IsNotEmpty()
+    category: string;
+
+    @IsNotEmpty()
+    countInStock: number;
 }

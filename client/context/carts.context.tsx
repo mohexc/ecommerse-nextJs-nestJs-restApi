@@ -1,14 +1,74 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
-const Context = React.createContext({});
+interface CartContextInterface {
+  cart: any;
+  addCartItem: (product) => void;
+  removeCratItem: (product) => void;
+}
+
+const Context = React.createContext<CartContextInterface>({
+  cart: [],
+  addCartItem: (product) => {},
+  removeCratItem: (product) => {},
+});
+
 // main component
 const CartsContext = ({ children }) => {
-  const [carts, setcarts] = useState();
+  const [cart, setCart] = useState([]);
 
-  const context = {
-    carts,
+  useEffect(() => {
+    console.log(cart);
+  }, [cart]);
+
+  const addCartItem = (product) => {
+    console.log(product);
+    debugger;
+    const cloneCart = [...cart];
+    const findeCartItem = cloneCart.find((cartItem) => product.id === cartItem.product.id);
+    const findeCartItemIndex = cloneCart.findIndex((cartItem) => product.id === cartItem.product.id);
+    if (findeCartItem) {
+      console.log(findeCartItem);
+      debugger;
+      findeCartItem.qyt = findeCartItem.qyt + 1;
+      cloneCart[findeCartItemIndex] = findeCartItem;
+      return setCart(cloneCart);
+    } else {
+      const cartItem = {
+        product,
+        qyt: 1,
+      };
+      cloneCart.push(cartItem);
+      return setCart(cloneCart);
+    }
   };
-  return <Context.Provider value={context}>{children}</Context.Provider>;
+
+  const removeCratItem = (product) => {
+    const cloneCart = [...cart];
+    const findeCartItem = cloneCart.find((cartItem) => product.id === cartItem.product.id);
+    const findeCartItemIndex = cloneCart.find((cartItem) => product.id === cartItem.product.id);
+    if (findeCartItem) {
+      findeCartItem.qyt = findeCartItem.qyt - 1;
+      cloneCart[findeCartItemIndex] = findeCartItem;
+      return setCart(cloneCart);
+    } else {
+      cloneCart.push(product);
+    }
+  };
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  return (
+    <Context.Provider
+      value={{
+        cart,
+        addCartItem,
+        removeCratItem,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
 };
 
 export const useCartContext = () => {

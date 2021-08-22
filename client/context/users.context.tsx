@@ -70,7 +70,6 @@ const UsersContext = ({ children }) => {
     try {
       setIsLoading(true);
       const { data } = await httpRequests.get(`users/${id}`);
-      debugger;
       setUser(data);
     } catch (error) {
       setError(error);

@@ -7,15 +7,17 @@ import SignUpBtn from "./button/signup-btn";
 import AvatarUser from "./button/avatar-user";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
+import { useCartContext } from "../../context/carts.context";
+import { useEffect } from "react";
 
 const HeaderBar: FC = () => {
   const { currentUser } = useAuthContext();
   const route = useRouter();
   const handlerSearch = (values) => {
-    console.log(values);
-    debugger;
     route.push("/products");
   };
+  const { cart } = useCartContext();
+  useEffect(() => {}, [cart]);
   return (
     <Layout.Header style={{ background: "white", boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", zIndex: 1 }}>
       <Row>
@@ -30,7 +32,7 @@ const HeaderBar: FC = () => {
           <Input.Search bordered enterButton allowClear onSearch={handlerSearch} />
         </Col>
         <Col xs={6} style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-          <Badge count={5}>
+          <Badge count={cart.reduce((acc, curr) => acc + curr.qyt, 0)}>
             <ShoppingCartOutlined onClick={() => route.push("/cart")} style={{ fontSize: "1.5rem" }} />
           </Badge>
           {currentUser ? (

@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
 import { CartModule } from './cart/cart.module';
 import { RoleModule } from './role/role.module';
+import { OrderItemModule } from './order-item/order-item.module';
+import { CartItemModule } from './cart-item/cart-item.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { RoleModule } from './role/role.module';
     OrderModule,
     CartModule,
     RoleModule,
+    OrderItemModule,
+    CartItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

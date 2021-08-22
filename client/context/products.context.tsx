@@ -1,6 +1,28 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useAuthContext } from "./auth.context";
-import { Product, ProductContext } from "./type";
+
+export interface Product {
+  id: number;
+  name: string;
+  title: string;
+  description: string;
+  price: number;
+  images: string[];
+  video: string;
+  brand: string;
+  category: string;
+  countInStock: number;
+}
+export interface ProductContext {
+  products: Product[] | undefined;
+  product: Product | undefined;
+  isloading: boolean;
+  createProduct: (values) => Promise<any>;
+  getProducts: () => Promise<void>;
+  getProduct: (id: string | string[]) => Promise<any>;
+  updateProduct: (id, values) => Promise<any>;
+  deleteProduct: (id: string) => void;
+}
 
 const Context = React.createContext<ProductContext>({
   products: undefined,
@@ -27,8 +49,13 @@ const ProductsContext = ({ children }) => {
     try {
       const { data } = await httpRequests.post(`product`, values);
       getProducts();
+      return data;
     } catch (error) {
-      return error;
+      const result = error.response.data ? error.response.data.message[0] : error.response.message;
+      return {
+        error: true,
+        message: result,
+      };
     }
   };
 
@@ -44,12 +71,25 @@ const ProductsContext = ({ children }) => {
     const { data } = await httpRequests.get(`product/${id}`);
     setProduct(data);
     setIsLoading(false);
+    return data;
   };
 
   const updateProduct = async (id, values) => {
-    const { data } = await httpRequests.patch(`product/${id}`, values);
-    getProducts();
-    return;
+    try {
+      console.log(id, values);
+      debugger;
+      const { data } = await httpRequests.patch(`product/${id}`, values);
+      console.log(data);
+      debugger;
+      getProducts();
+      return data;
+    } catch (error) {
+      const result = error.response.data ? error.response.data.message[0] : error.response.message;
+      return {
+        error: true,
+        message: result,
+      };
+    }
   };
 
   const deleteProduct = async (id) => {

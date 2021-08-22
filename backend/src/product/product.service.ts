@@ -32,11 +32,17 @@ export class ProductService {
     if (!found) {
       throw new NotFoundException({ message: `Product ${id} not found` })
     }
-    const { description, name, price, title } = updateProductDto
-    found.description = description ? description : found.description
+    const { description, name, price, title, images, video, brand, category, countInStock } = updateProductDto
     found.name = name ? name : found.name
-    found.price = price ? price : found.price
+    found.description = description ? description : found.description
     found.title = title ? title : found.title
+    found.brand = brand ? brand : found.brand
+    found.category = category ? category : found.category
+    found.countInStock = countInStock ? countInStock : found.countInStock
+    found.video = video ? video : found.video
+    found.price = price ? price : found.price
+    found.images = images ? images : found.images
+
     return await this.productRepository.save(found)
   }
 

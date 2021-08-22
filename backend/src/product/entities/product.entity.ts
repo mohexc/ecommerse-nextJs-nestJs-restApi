@@ -9,18 +9,27 @@ export class Product {
     @Column()
     name: string;
 
-    @Column()
+    @Column('text', { nullable: true })
     title: string;
 
     @Column()
     description: string;
 
-    @Column()
+    @Column('decimal')
     price: number;
 
     @Column("text", { array: true })
     images: string[];
 
-    @Column()
+    @Column('text', { nullable: true })
     video: string;
+
+    @Column()
+    brand: string;
+
+    @Column()
+    category: string;
+
+    @Column()
+    countInStock: number;
 }

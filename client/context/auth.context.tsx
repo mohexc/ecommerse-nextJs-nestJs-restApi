@@ -56,9 +56,12 @@ const AuthContext = ({ children }) => {
   };
 
   const getProfile = async () => {
-    const { data } = await httpRequests.get("auth/profile");
-    setCurrentUser(data);
-    debugger;
+    try {
+      const { data } = await httpRequests.get("auth/profile");
+      setCurrentUser(data);
+    } catch (error) {
+      localStorage.removeItem("tokenKey");
+    }
   };
 
   const signUp = async (values: SignUpInput) => {
